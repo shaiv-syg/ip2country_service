@@ -7,7 +7,7 @@ from fastapi.testclient import TestClient
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
-from app.api import router
+from app.api.router import router  # Import the router instance, not the module
 
 @pytest.fixture
 def client():

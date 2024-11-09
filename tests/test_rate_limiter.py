@@ -4,7 +4,7 @@ Unit tests for the RateLimiter class.
 
 import pytest
 import time
-from app.rate_limiter import RateLimiter
+from app.core.rate_limiter import RateLimiter
 
 @pytest.fixture(autouse=True)
 def clear_redis():

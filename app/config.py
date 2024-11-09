@@ -1,6 +1,6 @@
 import yaml
 import os
-from .constants import CONFIG_FILE_PATH
+from app.constants import CONFIG_FILE_PATH
 
 class Setting:
     def __init__(self, default, yml_path, env_var=None, value_type=str):

@@ -1,15 +1,13 @@
 from fastapi import APIRouter, Request, HTTPException
 from pydantic import BaseModel
-import ipaddress
-
-from app.rate_limiter import RateLimiter
+from app.core.rate_limiter import RateLimiter
+from app.core.validators import is_valid_ip
 from app.database import get_ip2country_db
 from app.config import IP_COUNTRY_DB
 
 router = APIRouter()
 rate_limiter = RateLimiter()
-ip_data_store = IP_COUNTRY_DB
-ip2country_db = get_ip2country_db(ip_data_store)
+ip2country_db = get_ip2country_db(IP_COUNTRY_DB)
 
 class LocationResponse(BaseModel):
     country: str
@@ -19,7 +17,7 @@ class ErrorResponse(BaseModel):
     error: str
 
 @router.get(
-    "/v1/find-country",
+    "/find-country",
     response_model=LocationResponse,
     responses={
         400: {"model": ErrorResponse, "description": "Invalid IP address"},
@@ -37,11 +35,4 @@ async def find_country(ip: str, request: Request):
     if location:
         return location
     else:
-        raise HTTPException(status_code=404, detail="IP address not found")
-
-def is_valid_ip(ip_str: str) -> bool:
-    try:
-        ipaddress.ip_address(ip_str)
-        return True
-    except ValueError:
-        return False 
+        raise HTTPException(status_code=404, detail="IP address not found") 

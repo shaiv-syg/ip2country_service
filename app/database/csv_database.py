@@ -15,7 +15,7 @@ class CSVDatabase(IP2CountryDatabase):
                 })
 
     def lookup(self, ip_address: str) -> dict:
-        # Simple exact match lookup
+        # Override lookup the base class method
         for entry in self.ip_data:
             if entry['ip'] == ip_address:
                 return {

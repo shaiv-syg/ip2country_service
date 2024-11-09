@@ -4,7 +4,7 @@ conda activate ip2country_env
 
 # Set environment variables
 export REDIS_HOST=localhost
-export REDIS_PORT=6380
+export REDIS_PORT=6381
 export RATE_LIMIT=2
 
 

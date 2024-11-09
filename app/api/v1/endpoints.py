@@ -27,10 +27,10 @@ class ErrorResponse(BaseModel):
 )
 async def find_country(ip: str, request: Request):
     client_ip = request.client.host
-    if not is_valid_ip(ip):
-        raise HTTPException(status_code=400, detail="Invalid IP address")
     if not rate_limiter.allow_request(client_ip):
         raise HTTPException(status_code=429, detail="Too Many Requests")
+    if not is_valid_ip(ip):
+        raise HTTPException(status_code=400, detail="Invalid IP address")
     location = ip2country_db.lookup(ip)
     if location:
         return location

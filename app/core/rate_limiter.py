@@ -45,5 +45,4 @@ class RateLimiter:
             return count <= self.max_requests
         except redis.ConnectionError as e:
             logger.error(f"Redis connection error: {e}")
-            # Depending on requirements, decide how to handle Redis failures
             return True

@@ -1,13 +1,29 @@
-from fastapi import APIRouter, Request, HTTPException
+from fastapi import APIRouter, Request, HTTPException, Depends
 from pydantic import BaseModel
+from typing import Optional, Any
 from app.core.rate_limiter import RateLimiter
 from app.core.validators import is_valid_ip
 from app.database import get_ip2country_db
 from app.config import IP_COUNTRY_DB
+from functools import lru_cache
 
 router = APIRouter()
-rate_limiter = RateLimiter()
-ip2country_db = get_ip2country_db(IP_COUNTRY_DB)
+
+class Dependencies:
+    _rate_limiter: Optional[RateLimiter] = None
+    _ip_database: Optional[Any] = None
+
+    @classmethod
+    def get_rate_limiter(cls):
+        if cls._rate_limiter is None:
+            cls._rate_limiter = RateLimiter()
+        return cls._rate_limiter
+
+    @classmethod
+    def get_ip_database(cls):
+        if cls._ip_database is None:
+            cls._ip_database = get_ip2country_db(IP_COUNTRY_DB)
+        return cls._ip_database
 
 class LocationResponse(BaseModel):
     country: str
@@ -15,6 +31,14 @@ class LocationResponse(BaseModel):
 
 class ErrorResponse(BaseModel):
     error: str
+
+@lru_cache()
+def get_rate_limiter():
+    return RateLimiter()
+
+@lru_cache()
+def get_ip_database():
+    return get_ip2country_db(IP_COUNTRY_DB)
 
 @router.get(
     "/find-country",
@@ -25,7 +49,12 @@ class ErrorResponse(BaseModel):
         429: {"model": ErrorResponse, "description": "Too Many Requests"},
     }
 )
-async def find_country(ip: str, request: Request):
+async def find_country(
+    ip: str, 
+    request: Request,
+    rate_limiter: RateLimiter = Depends(get_rate_limiter),
+    ip2country_db: any = Depends(get_ip_database)
+):
     client_ip = request.client.host
     if not rate_limiter.allow_request(client_ip):
         raise HTTPException(status_code=429, detail="Too Many Requests")

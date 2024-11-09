@@ -1,0 +1,23 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: FastAPI",
+            "type": "python",
+            "request": "launch",
+            "module": "uvicorn",
+            "args": [
+                "app.main:app",
+                "--reload"
+            ],
+            "env": {
+                "REDIS_HOST": "localhost",
+                "REDIS_PORT": "6379",
+                "RATE_LIMIT": "2"
+            },
+            "python": "/opt/anaconda3/envs/ip2country_env/bin/python",
+            "jinja": true,
+            "justMyCode": true
+        }
+    ]
+} 

@@ -1,0 +1,29 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Run Dev Script",
+      "type": "shell",
+      "command": "./run_dev.sh",
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "Start Redis",
+      "type": "shell",
+      "command": "docker-compose -f docker-compose.dev.yml up -d",
+      "problemMatcher": [],
+      "group": "build"
+    },
+    {
+      "label": "Stop Redis",
+      "type": "shell",
+      "command": "docker-compose -f docker-compose.dev.yml down",
+      "problemMatcher": [],
+      "group": "build"
+    }
+  ]
+} 

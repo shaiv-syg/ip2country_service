@@ -40,7 +40,8 @@ class RateLimiter:
 
             count = self.redis_client.incr(key)
             if count == 1:
-                self.redis_client.expire(key, 1)  # Set TTL to 1 second
+                # Set TTL to 1 second
+                self.redis_client.expire(key, 1)  
 
             return count <= self.max_requests
         except redis.ConnectionError as e:

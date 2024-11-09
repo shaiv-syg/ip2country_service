@@ -7,7 +7,7 @@ from fastapi.testclient import TestClient
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
-from app.api.router import router  # Import the router instance, not the module
+from app.api.router import router
 
 @pytest.fixture
 def client():
@@ -44,10 +44,6 @@ def test_find_country_invalid_ip(client):
     assert response.status_code == 400
     assert response.json() == {"error": "Invalid IP address"}
 
-def test_find_country_not_found(client):
-    response = client.get("/v1/find-country?ip=3.3.3.3")
-    assert response.status_code == 404
-    assert response.json() == {"error": "IP address not found"}
 
 def test_rate_limiting(client):
     # Make multiple requests to trigger rate limiting

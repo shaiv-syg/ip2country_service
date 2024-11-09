@@ -1,17 +1,19 @@
 version: '3.8'
 
 services:
-  app:
-    build: .
-    ports:
-      - "8000:80"
-    depends_on:
-      - redis
-    environment:
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-
-  redis:
+  redis-dev:
     image: redis:alpine
+    restart: always
     ports:
-      - "6379:6379" 
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 1s
+      timeout: 3s
+      retries: 30
+    networks:
+      - dev-network
+
+networks:
+  dev-network:
+    driver: bridge 

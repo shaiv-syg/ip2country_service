@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    depends_on:
+      redis-test:
+        condition: service_healthy
+    environment:
+      - REDIS_HOST=redis-test
+      - REDIS_PORT=6379
+      - RATE_LIMIT=2
+    command: ["pytest", "-v"]
+    volumes:
+      - .:/app
+    networks:
+      - test-network
+
+  redis-test:
+    image: redis:alpine
+    ports:
+      - "6380:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 1s
+      timeout: 3s
+      retries: 30
+    networks:
+      - test-network
+
+networks:
+  test-network:
+    driver: bridge

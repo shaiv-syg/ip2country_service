@@ -1,0 +1,5 @@
+rate_limiter_service:
+  ip_country_db: "csv"
+  rate_limit: 5
+  redis_host: "redis"
+  redis_port: 6379
